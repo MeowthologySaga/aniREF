@@ -5,7 +5,48 @@
 
 **Video → Frame → Key Pose → Compare → Combine → Blocking**
 
-설계, 데이터 모델, 단축키, 마일스톤은 [docs/DESIGN.md](docs/DESIGN.md) 참고.
+## ⬇️ 다운로드 (설치 필요 없음)
+
+### [👉 aniREF 포터블 다운로드 (Windows 10/11)](https://github.com/MeowthologySaga/aniREF/releases/latest)
+
+Python 같은 건 필요 없습니다. zip을 받아서 풀고 실행하면 끝입니다.
+
+### 1. 다운로드
+오른쪽 **Releases**의 최신 버전을 누르고, **Assets**에서 `aniREF-…-portable.zip`을 받습니다.
+
+![다운로드](docs/images/step1_download.png)
+
+### 2. 압축 풀기
+받은 zip 파일을 우클릭 → **모두 압축 풀기**. 바탕화면이나 원하는 폴더에 풀면 됩니다.
+
+![압축 풀기](docs/images/step2_unzip.png)
+
+### 3. 실행
+풀린 `aniREF` 폴더 안의 **aniREF.exe**를 더블클릭합니다.
+
+![실행](docs/images/step3_run.png)
+
+### 4. 파란 경고창이 뜨면
+처음 한 번만 Windows가 경고를 띄웁니다. **추가 정보 → 실행**을 누르세요.
+
+![SmartScreen](docs/images/step4_smartscreen.png)
+
+### 5. 영상 열기
+**영상 불러와서 시작**을 누르거나, 레퍼런스 영상 파일을 창에 끌어다 놓습니다.
+
+![영상 열기](docs/images/step5_open_video.png)
+
+### 6. 쓰는 법 한눈에
+좋은 프레임에서 `K` → 라이브러리에 키포즈가 모이고, `A`로 아래 시퀀스에 붙여 새 모션을 짭니다.
+프로그램 안에서 **F1**(사용 설명서)과 **?**(단축키 전체)를 누르면 자세한 안내가 나옵니다.
+
+![작업 흐름](docs/images/step6_workflow.png)
+
+> 새 버전이 나오면 프로그램이 알려줍니다. 새 zip을 받아 다른 폴더에 풀고 쓰면 됩니다(예전 폴더의 `data` 폴더를 옮기면 설정이 그대로 유지됩니다).
+
+---
+
+설계, 데이터 모델, 단축키, 마일스톤은 [docs/DESIGN.md](docs/DESIGN.md) 참고. 아래는 개발자용 안내입니다.
 
 ## 할 수 있는 것
 
