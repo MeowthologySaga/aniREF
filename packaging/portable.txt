@@ -1,0 +1,14 @@
+﻿aniREF portable mode
+====================
+
+이 파일이 aniREF.exe 옆에 있으면 aniREF는 설정과 로그를 이 폴더 안의 `data` 폴더에
+저장합니다. 폴더째 USB나 공유 드라이브에 옮겨도 설정이 따라갑니다.
+
+이 파일을 지우면 설치판과 똑같이 %APPDATA%\aniREF 에 저장합니다.
+(설치 파일로 설치한 aniREF에는 이 파일이 들어 있지 않습니다.)
+
+--
+
+While this file sits next to aniREF.exe, aniREF keeps its settings and logs in
+the `data` folder here instead of %APPDATA%\aniREF, so the folder can travel on
+a USB stick or a shared drive. Delete the file to use %APPDATA% again.

@@ -1,0 +1,110 @@
+// aniREF - Maya installer.
+//
+// Drag this file into the Maya viewport. It copies aniref_markers.py (which
+// sits next to this file) into your Maya scripts folder and puts an "aniREF"
+// button on the shelf you are looking at. The button imports an aniREF
+// markers .json as Time Slider Bookmarks; right-click it to remove them.
+//
+// Maya 2020 and newer. English only on purpose: MEL files are read with the
+// system code page, so non-ASCII text would come out garbled.
+
+global proc anirefInstallMarker()
+{
+    // Only here so whatIs can tell which folder this file was dropped from.
+}
+
+global proc string anirefSourceDir()
+{
+    string $where = `whatIs "anirefInstallMarker"`;          // "Mel procedure found in: C:/x/install_aniref.mel"
+    string $path = `substitute "^[^:]*: " $where ""`;
+    if ($path == $where || !`filetest -f $path`)
+        return "";
+    string $dir = `dirname $path`;
+    return `substitute "/$" $dir ""`;                       // dirname may end with a slash
+}
+
+global proc string anirefScriptDir()
+{
+    string $scripts = `internalVar -userScriptDir`;
+    string $dir = `substitute "/$" $scripts ""`;
+    sysFile -makeDir $dir;
+    return $dir;
+}
+
+global proc anirefShelfButton(string $script)
+{
+    global string $gShelfTopLevel;
+    if (!`tabLayout -exists $gShelfTopLevel`)
+    {
+        warning "aniREF: no shelf to add the button to.";
+        return;
+    }
+    string $shelf = `tabLayout -q -selectTab $gShelfTopLevel`;
+    string $parent = $gShelfTopLevel + "|" + $shelf;
+
+    // replace the button of an earlier install
+    string $kids[] = `shelfLayout -q -childArray $parent`;
+    for ($kid in $kids)
+    {
+        string $full = $parent + "|" + $kid;
+        if (`control -exists $full` && `shelfButton -exists $full`)
+        {
+            if (`shelfButton -q -label $full` == "aniREF")
+                deleteUI $full;
+        }
+    }
+
+    string $import = "import aniref_markers\naniref_markers.import_markers()";
+    string $remove = "import aniref_markers\naniref_markers.remove_bookmarks()";
+    string $tip = "aniREF: import key pose markers as Time Slider Bookmarks";
+
+    // the right-click menu item needs Maya 2016+; fall back to a plain button
+    int $failed = catchQuiet(`shelfButton -parent $parent -label "aniREF" -annotation $tip
+        -image1 "commandButton.png" -imageOverlayLabel "aniREF"
+        -sourceType "python" -command $import
+        -menuItem "Remove aniREF bookmarks" $remove -menuItemPython 0`);
+    if ($failed)
+    {
+        shelfButton -parent $parent -label "aniREF" -annotation $tip
+            -image1 "commandButton.png" -imageOverlayLabel "aniREF"
+            -sourceType "python" -command $import;
+    }
+    saveAllShelves $gShelfTopLevel;
+
+    confirmDialog -title "aniREF"
+        -message ("aniREF is installed.\n\nShelf button: " + $shelf + "\nScript: " + $script
+            + "\n\nClick the aniREF button and pick a markers .json exported from aniREF.")
+        -button "OK";
+    inViewMessage -assistMessage ("aniREF button added to the <hl>" + $shelf + "</hl> shelf")
+        -position "topCenter" -fade;
+}
+
+global proc anirefInstall()
+{
+    string $source = "";
+    string $dir = anirefSourceDir();
+    if ($dir != "")
+        $source = $dir + "/aniref_markers.py";
+    if ($source == "" || !`filetest -f $source`)
+    {
+        string $picked[] = `fileDialog2 -fileFilter "aniref_markers.py" -dialogStyle 2 -fileMode 1
+            -caption "aniREF: locate aniref_markers.py"`;
+        if (size($picked) == 0)
+            return;
+        $source = $picked[0];
+    }
+
+    string $target = anirefScriptDir() + "/aniref_markers.py";
+    if (!`sysFile -copy $target $source`)
+    {
+        confirmDialog -title "aniREF" -message ("Could not copy the script to:\n" + $target) -button "OK";
+        return;
+    }
+
+    // make the fresh copy importable in this session
+    python("import sys, maya.cmds as _c; _d = _c.internalVar(userScriptDir=True); (_d in sys.path) or sys.path.append(_d); sys.modules.pop('aniref_markers', None)");
+
+    anirefShelfButton($target);
+}
+
+anirefInstall();
