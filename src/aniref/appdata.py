@@ -1,4 +1,4 @@
-"""Where settings and logs live, and machine facts the app adapts to.
+﻿"""Where settings and logs live, and machine facts the app adapts to.
 
 Installed build: %APPDATA%\\aniREF.
 Portable build (a `portable.txt` next to aniREF.exe): a `data` folder next to
@@ -23,7 +23,7 @@ from . import __version__
 APP_NAME = "aniREF"
 VERSION = __version__
 # Public repository; set once it exists (enables "Report a problem" in Help).
-GITHUB_URL = ""
+GITHUB_URL = "https://github.com/MeowthologySaga/aniREF"
 
 log = logging.getLogger("aniref")
 
